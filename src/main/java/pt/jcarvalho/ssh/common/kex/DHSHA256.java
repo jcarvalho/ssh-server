@@ -3,23 +3,26 @@ package pt.jcarvalho.ssh.common.kex;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import pt.jcarvalho.ssh.common.exception.HashException;
+public class DHSHA256 implements KeyExchange {
 
-public class DHSHA256 extends AbstractKeyExchange {
+    private static MessageDigest digest;
 
-	@Override
-	public byte[] hashOf(byte[] data) throws HashException {
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			return digest.digest(data);
-		} catch (NoSuchAlgorithmException e) {
-			throw new HashException(e.getMessage());
-		}
+    static {
+	try {
+	    digest = MessageDigest.getInstance("SHA-256");
+	} catch (NoSuchAlgorithmException e) {
+	    throw new RuntimeException("Error initializing DHSHA256, SHA-256 was not found in the system!");
 	}
+    }
 
-	@Override
-	public int hashSize() {
-		return 32;
-	}
+    @Override
+    public byte[] hashOf(byte[] data) {
+	return digest.digest(data);
+    }
+
+    @Override
+    public int hashSize() {
+	return 32;
+    }
 
 }

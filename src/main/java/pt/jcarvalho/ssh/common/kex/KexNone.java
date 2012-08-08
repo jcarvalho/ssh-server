@@ -1,27 +1,15 @@
 package pt.jcarvalho.ssh.common.kex;
 
-import pt.jcarvalho.ssh.common.exception.HashException;
+public class KexNone implements KeyExchange {
 
-/**
- * 
- * Key Exchange that performs no hashing
- * 
- * @author joaocarvalho
- *
- */
+    @Override
+    public byte[] hashOf(byte[] data) {
+	return data;
+    }
 
-public class KexNone extends AbstractKeyExchange {
-
-	@Override
-	public byte[] hashOf(byte[] data) throws HashException {
-		return data;
-	}
-
-	@Override
-	public int hashSize() {
-		return -1;
-	}
-	
-	
+    @Override
+    public int hashSize() {
+	return -1;
+    }
 
 }

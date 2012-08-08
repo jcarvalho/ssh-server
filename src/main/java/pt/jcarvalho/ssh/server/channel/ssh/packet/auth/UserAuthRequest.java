@@ -2,7 +2,7 @@ package pt.jcarvalho.ssh.server.channel.ssh.packet.auth;
 
 import pt.jcarvalho.ssh.common.SSHNumbers;
 import pt.jcarvalho.ssh.common.adt.SSHString;
-import pt.jcarvalho.ssh.server.Server;
+import pt.jcarvalho.ssh.server.SSHServer;
 import pt.jcarvalho.ssh.server.channel.ssh.packet.Disconnect;
 import pt.jcarvalho.ssh.server.channel.ssh.packet.SSHPacket;
 
@@ -65,7 +65,7 @@ public class UserAuthRequest extends SSHPacket {
 
 		if (methodName.equals("password")) {
 			
-			if (!Server.usernames.containsKey(username)){
+			if (!SSHServer.usernames.containsKey(username)){
 				next = new UserAuthFailure(false);
 				return;
 			}
@@ -74,7 +74,7 @@ public class UserAuthRequest extends SSHPacket {
 
 			System.out.println("Password was: " + password);
 
-			if (Server.usernames.get(username).equals(password)) {
+			if (SSHServer.usernames.get(username).equals(password)) {
 				next = new UserAuthSuccess();
 			} else {
 				next = new UserAuthFailure(false);

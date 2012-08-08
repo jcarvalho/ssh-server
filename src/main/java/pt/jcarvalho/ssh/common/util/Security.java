@@ -15,126 +15,125 @@ import javax.crypto.Cipher;
 
 public class Security {
 
-	public static RSAPublicKey rsaPub;
-	public static RSAPrivateKey rsaPriv;
-	public static KeyPair pair;
+    public static RSAPublicKey rsaPub;
+    public static RSAPrivateKey rsaPriv;
+    public static KeyPair pair;
 
-	public static RSAPublicKey getRsaPub() {
-		return rsaPub;
+    public static RSAPublicKey getRsaPub() {
+	return rsaPub;
+    }
+
+    public static void setRsaPub(RSAPublicKey rsaPub) {
+	Security.rsaPub = rsaPub;
+    }
+
+    public static void generateKeys() {
+
+	System.out.println("\nStart generating RSA key");
+	try {
+	    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+	    keyGen.initialize(2048);
+	    pair = keyGen.generateKeyPair();
+	} catch (Exception ex) {
+	    System.out.println(ex.toString());
 	}
 
-	public static void setRsaPub(RSAPublicKey rsaPub) {
-		Security.rsaPub = rsaPub;
+	System.out.println("Finish generating RSA key");
+
+	rsaPriv = (RSAPrivateKey) pair.getPrivate();
+	rsaPub = (RSAPublicKey) pair.getPublic();
+
+    }
+
+    public static byte[] Cipher(PrivateKey _priv, byte[] plainText) {
+
+	try {
+
+	    System.out.println("Starting Cipher");
+	    Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
+	    cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, _priv);
+	    byte[] cipherText = cipher.doFinal(plainText);
+	    System.out.println("Finishing Cipher");
+
+	    return cipherText;
+
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
 
-	public static void generateKeys() {
+	return null;
+    }
 
-		System.out.println("\nStart generating RSA key");
-		try {
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-			keyGen.initialize(2048);
-			pair = keyGen.generateKeyPair();
-		} catch (Exception ex) {
-			System.out.println(ex.toString());
-		}
+    public static byte[] deCipher(PublicKey _pub, byte[] cipheredText) {
 
-		System.out.println("Finish generating RSA key");
+	try {
 
-		rsaPriv = (RSAPrivateKey) pair.getPrivate();
-		rsaPub = (RSAPublicKey) pair.getPublic();
+	    System.out.println("Starting deCipher");
+	    Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 
+	    cipher.init(Cipher.DECRYPT_MODE, _pub);
+	    byte[] decipheredText = cipher.doFinal(cipheredText);
+	    System.out.println("Finishing deCipher");
+
+	    return decipheredText;
+
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
 
-	public static byte[] Cypher(PrivateKey _priv, byte[] plainText) {
+	return null;
+    }
 
-		try {
+    public static byte[] Sign(PrivateKey privateKey, byte[] plaintext) {
+	Signature instance = null;
+	byte[] signature = null;
+	try {
+	    instance = Signature.getInstance("SHA1withRSA");
 
-			System.out.println("Starting Cypher");
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+	    instance.initSign(privateKey);
+	    instance.update((plaintext));
 
-			cipher.init(Cipher.ENCRYPT_MODE, _priv);
-			byte[] cipherText = cipher.doFinal(plainText);
-			System.out.println("Finishing Cypher");
-
-			return cipherText;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return null;
+	    signature = instance.sign();
+	} catch (NoSuchAlgorithmException e) {
+	    e.printStackTrace();
+	    return null;
+	} catch (InvalidKeyException e) {
+	    e.printStackTrace();
+	    return null;
+	} catch (SignatureException e) {
+	    e.printStackTrace();
+	    return null;
 	}
 
-	public static byte[] deCipher(PublicKey _pub, byte[] cipheredText) {
+	return signature;
+    }
 
-		try {
+    public static boolean Verify(PublicKey publicKey, byte[] signature, byte[] data) {
+	Signature instance = null;
+	try {
+	    instance = Signature.getInstance("SHA1withRSA");
 
-			System.out.println("Starting deCipher");
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+	    instance.initVerify(publicKey);
+	    instance.update(data);
 
-			cipher.init(Cipher.DECRYPT_MODE, _pub);
-			byte[] decipheredText = cipher.doFinal(cipheredText);
-			System.out.println("Finishing deCipher");
-
-			return decipheredText;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return null;
+	    return instance.verify(signature);
+	} catch (NoSuchAlgorithmException e) {
+	    e.printStackTrace();
+	} catch (InvalidKeyException e) {
+	    e.printStackTrace();
+	} catch (SignatureException e) {
+	    e.printStackTrace();
 	}
 
-	public static byte[] Sign(PrivateKey privateKey, byte[] plaintext) {
-		Signature instance = null;
-		byte[] signature = null;
-		try {
-			instance = Signature.getInstance("SHA1withRSA");
+	return false;
+    }
 
-			instance.initSign(privateKey);
-			instance.update((plaintext));
+    public static RSAPrivateKey getRsaPriv() {
+	return rsaPriv;
+    }
 
-			signature = instance.sign();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-			return null;
-		} catch (SignatureException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return signature;
-	}
-
-	public static boolean Verify(PublicKey publicKey, byte[] signature,
-			byte[] data) {
-		Signature instance = null;
-		try {
-			instance = Signature.getInstance("SHA1withRSA");
-
-			instance.initVerify(publicKey);
-			instance.update(data);
-
-			return instance.verify(signature);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (SignatureException e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
-	public static RSAPrivateKey getRsaPriv() {
-		return rsaPriv;
-	}
-
-	public static void setRsaPriv(RSAPrivateKey rsaPriv) {
-		Security.rsaPriv = rsaPriv;
-	}
+    public static void setRsaPriv(RSAPrivateKey rsaPriv) {
+	Security.rsaPriv = rsaPriv;
+    }
 }

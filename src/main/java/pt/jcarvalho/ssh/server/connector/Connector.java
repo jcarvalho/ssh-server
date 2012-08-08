@@ -46,10 +46,11 @@ public class Connector implements Runnable {
 
     }
 
+    @Override
     public void run() {
 
 	try {
-	    String input = channel.setUp();
+	    String input = channel.setup();
 	    if (input != null) {
 		System.out.println("Exec Mode");
 		execute(input);
@@ -75,15 +76,11 @@ public class Connector implements Runnable {
 			execute(line);
 		}
 
-		// TODO Add more commands
-
 	    }
 
 	    channel.close(0);
 
 	} catch (IOException e) {
-	    e.printStackTrace();
-	} catch (SecureChannelException e) {
 	    e.printStackTrace();
 	} finally {
 	    if (!socket.isClosed()) {

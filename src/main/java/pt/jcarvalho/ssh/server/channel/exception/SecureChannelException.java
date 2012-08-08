@@ -1,14 +1,16 @@
 package pt.jcarvalho.ssh.server.channel.exception;
 
-public class SecureChannelException extends Exception {
+import java.io.IOException;
 
-	/**
+public class SecureChannelException extends IOException {
+
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -8503962182979618401L;
-	
-	public SecureChannelException(String s) {
-		super(s);
-	}
+    private static final long serialVersionUID = -8503962182979618401L;
+
+    public SecureChannelException(String s) {
+	super(s);
+    }
 
 }
