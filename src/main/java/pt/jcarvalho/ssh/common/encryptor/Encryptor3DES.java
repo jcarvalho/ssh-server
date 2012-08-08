@@ -6,9 +6,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import pt.jcarvalho.ssh.common.exception.CipherException;
+import pt.jcarvalho.ssh.common.Encryptor;
 
-public class Encryptor3DES implements pt.jcarvalho.ssh.common.Encryptor {
+public class Encryptor3DES implements Encryptor {
 
     IvParameterSpec iv;
     Cipher toCipher, toDecipher;
@@ -53,7 +53,7 @@ public class Encryptor3DES implements pt.jcarvalho.ssh.common.Encryptor {
 	    toDecipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
 	} catch (GeneralSecurityException e) {
-	    throw new CipherException(e.getMessage());
+	    throw new CipherException(e);
 	}
 
     }

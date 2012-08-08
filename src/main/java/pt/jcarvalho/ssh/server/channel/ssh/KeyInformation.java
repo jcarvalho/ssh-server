@@ -7,11 +7,11 @@ import javax.crypto.spec.DHParameterSpec;
 
 import pt.jcarvalho.ssh.common.Compressor;
 import pt.jcarvalho.ssh.common.Encryptor;
+import pt.jcarvalho.ssh.common.KeyExchange;
+import pt.jcarvalho.ssh.common.MAC;
 import pt.jcarvalho.ssh.common.adt.MPInt;
 import pt.jcarvalho.ssh.common.compressor.CompressorNone;
 import pt.jcarvalho.ssh.common.encryptor.EncryptorNone;
-import pt.jcarvalho.ssh.common.kex.KeyExchange;
-import pt.jcarvalho.ssh.common.mac.AbstractMAC;
 import pt.jcarvalho.ssh.common.mac.MACNone;
 
 public class KeyInformation {
@@ -36,11 +36,11 @@ public class KeyInformation {
     public byte[] outgoingCipherKey;
 
     public Encryptor incomingCipher = new EncryptorNone(), outgoingCipher = new EncryptorNone();
-    public AbstractMAC incomingMAC = new MACNone(), outgoingMAC = new MACNone();
+    public MAC incomingMAC = new MACNone(), outgoingMAC = new MACNone();
     public Compressor incomingCompression = new CompressorNone(), outgoingCompression = new CompressorNone();
 
     public Encryptor TincomingCipher, ToutgoingCipher;
-    public AbstractMAC TincomingMAC, ToutgoingMAC;
+    public MAC TincomingMAC, ToutgoingMAC;
     public Compressor TincomingCompression, ToutgoingCompression;
 
     public int minGroupSize;

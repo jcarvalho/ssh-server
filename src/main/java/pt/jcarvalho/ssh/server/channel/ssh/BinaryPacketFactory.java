@@ -4,8 +4,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
 
-import pt.jcarvalho.ssh.common.exception.CipherException;
-import pt.jcarvalho.ssh.common.exception.MacException;
+import pt.jcarvalho.ssh.common.Encryptor.CipherException;
 import pt.jcarvalho.ssh.common.util.ByteArrayUtils;
 import pt.jcarvalho.ssh.server.channel.exception.InvalidPacketException;
 import pt.jcarvalho.ssh.server.channel.exception.SecureChannelException;
@@ -54,12 +53,10 @@ public class BinaryPacketFactory {
 
 	    byte[] ciphered = keyInformation.outgoingCipher.cipher(toCipher);
 
-	    byte[] mac = keyInformation.outgoingMAC.sign(keyInformation.outgoingMACKey, ByteArrayUtils.concat(seqNum, toCipher));
+	    byte[] mac = keyInformation.outgoingMAC.generateCode(ByteArrayUtils.concat(seqNum, toCipher));
 
 	    return ByteArrayUtils.concat(ciphered, mac);
 	} catch (CipherException e) {
-	    throw new SecureChannelException(e.getMessage());
-	} catch (MacException e) {
 	    throw new SecureChannelException(e.getMessage());
 	}
     }
@@ -87,8 +84,7 @@ public class BinaryPacketFactory {
 
 	    byte[] seqNum = ByteArrayUtils.toByteArray(keyInformation.incomingSeqNumber++);
 
-	    byte[] expectedMac = keyInformation.incomingMAC.sign(keyInformation.incomingMACKey,
-		    ByteArrayUtils.concat(seqNum, deciphered));
+	    byte[] expectedMac = keyInformation.incomingMAC.generateCode(ByteArrayUtils.concat(seqNum, deciphered));
 
 	    if (!Arrays.equals(mac, expectedMac)) {
 		keyInformation.incomingSeqNumber--;
@@ -104,8 +100,6 @@ public class BinaryPacketFactory {
 	    return keyInformation.incomingCompression.decompress(result, null);
 
 	} catch (CipherException e) {
-	    throw new SecureChannelException(e.getMessage());
-	} catch (MacException e) {
 	    throw new SecureChannelException(e.getMessage());
 	}
     }

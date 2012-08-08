@@ -1,7 +1,6 @@
 package pt.jcarvalho.ssh.common.encryptor;
 
 import pt.jcarvalho.ssh.common.Encryptor;
-import pt.jcarvalho.ssh.common.exception.CipherException;
 
 /**
  * Cipher that does no modification to the data

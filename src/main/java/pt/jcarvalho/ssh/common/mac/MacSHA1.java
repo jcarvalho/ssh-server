@@ -1,38 +1,41 @@
 package pt.jcarvalho.ssh.common.mac;
 
-import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import pt.jcarvalho.ssh.common.exception.MacException;
+import pt.jcarvalho.ssh.common.MAC;
 
-public class MacSHA1 extends AbstractMAC {
+public class MacSHA1 implements MAC {
 
-	@Override
-	public byte[] sign(byte[] key, byte[] data) throws MacException {
-		try {
-		SecretKey skey = new SecretKeySpec(key, "HmacSHA1");
-		Mac m = Mac.getInstance("HmacSHA1");
-		m.init(skey);
-		m.update(data);
-		return m.doFinal();
-		} catch(GeneralSecurityException e) {
-			throw new MacException(e.getMessage());
-		}
+    private Mac mac = null;
+
+    @Override
+    public void setKey(byte[] key) throws MacException {
+	try {
+	    SecretKey skey = new SecretKeySpec(key, "HmacSHA1");
+	    mac = Mac.getInstance("HmacSHA1");
+	    mac.init(skey);
+	} catch (NoSuchAlgorithmException | InvalidKeyException e) {
+	    throw new MacException(e);
 	}
+    }
 
-	@Override
-	public int macBytes() {
-		try {
-			Mac m = Mac.getInstance("HmacSHA1");
-			return m.getMacLength();
-		} catch (NoSuchAlgorithmException e) {
-			return 0;
-		}
-	}
+    @Override
+    public byte[] generateCode(byte[] data) {
 
+	if (mac == null)
+	    throw new IllegalStateException("MAC instance is being used before it was initialized!");
+
+	return mac.doFinal(data);
+    }
+
+    @Override
+    public int macBytes() {
+	return mac.getMacLength();
+    }
 
 }

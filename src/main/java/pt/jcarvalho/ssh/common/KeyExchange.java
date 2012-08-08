@@ -1,4 +1,4 @@
-package pt.jcarvalho.ssh.common.kex;
+package pt.jcarvalho.ssh.common;
 
 public interface KeyExchange {
 

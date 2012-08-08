@@ -1,7 +1,8 @@
 package pt.jcarvalho.ssh.server.channel.ssh.packet.kex;
 
+import pt.jcarvalho.ssh.common.Encryptor.CipherException;
+import pt.jcarvalho.ssh.common.MAC.MacException;
 import pt.jcarvalho.ssh.common.SSHNumbers;
-import pt.jcarvalho.ssh.common.exception.CipherException;
 import pt.jcarvalho.ssh.common.util.ByteArrayUtils;
 import pt.jcarvalho.ssh.server.channel.ssh.packet.Disconnect;
 import pt.jcarvalho.ssh.server.channel.ssh.packet.SSHPacket;
@@ -73,11 +74,11 @@ public class NewKeys extends SSHPacket {
 
 	    keyInformation.outgoingCipher.setKey(keyInformation.outgoingCipherKey);
 
-	    keyInformation.incomingMACKey = hashWithCharacterAndLength('E', keyInformation.incomingMAC.macBytes());
+	    keyInformation.incomingMAC.setKey(hashWithCharacterAndLength('E', keyInformation.incomingMAC.macBytes()));
 
-	    keyInformation.outgoingMACKey = hashWithCharacterAndLength('F', keyInformation.outgoingMAC.macBytes());
+	    keyInformation.outgoingMAC.setKey(hashWithCharacterAndLength('F', keyInformation.outgoingMAC.macBytes()));
 
-	} catch (CipherException e) {
+	} catch (CipherException | MacException e) {
 	    e.printStackTrace();
 	}
 

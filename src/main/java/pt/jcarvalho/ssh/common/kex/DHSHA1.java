@@ -3,6 +3,8 @@ package pt.jcarvalho.ssh.common.kex;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import pt.jcarvalho.ssh.common.KeyExchange;
+
 public class DHSHA1 implements KeyExchange {
 
     private static MessageDigest digest;

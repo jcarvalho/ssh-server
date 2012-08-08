@@ -1,26 +1,33 @@
 package pt.jcarvalho.ssh.common.mac;
 
+import pt.jcarvalho.ssh.common.MAC;
+
 /**
  * Class that implements the 'none' MAC.
+ * 
  * @author joaocarvalho
- *
+ * 
  */
 
-public final class MACNone extends AbstractMAC {
+public final class MACNone implements MAC {
 
-	/**
-	 * The MAC in this algorithm is always empty
-	 */
-	
-	@Override
-	public byte[] sign(byte[] key, byte[] data) {
-		byte [] res = new byte[0];
-		return res;
-	}
+    /**
+     * The MAC in this algorithm is always empty
+     */
 
-	@Override
-	public int macBytes() {
-		return 0;
-	}	
+    @Override
+    public byte[] generateCode(byte[] data) {
+	return new byte[0];
+    }
+
+    @Override
+    public int macBytes() {
+	return 0;
+    }
+
+    @Override
+    public void setKey(byte[] key) {
+	// No keys on this one...
+    }
 
 }
