@@ -6,7 +6,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	<groupId>pt.jcarvalho</groupId>
 	<artifactId>ssh-server</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>SSH Server</name>
 
 	<build>
