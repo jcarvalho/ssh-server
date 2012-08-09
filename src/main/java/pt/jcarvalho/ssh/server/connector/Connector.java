@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import pt.jcarvalho.ssh.server.channel.SecureChannel;
-import pt.jcarvalho.ssh.server.channel.exception.SecureChannelException;
-import pt.jcarvalho.ssh.server.channel.ssh.SSHSecureChannel;
+import pt.jcarvalho.ssh.ConnectionInfo;
+import pt.jcarvalho.ssh.SecureChannel;
+import pt.jcarvalho.ssh.server.channel.SSHSecureChannel;
 
 public class Connector implements Runnable {
 
@@ -20,7 +20,7 @@ public class Connector implements Runnable {
 	this.channel = new SSHSecureChannel(socket);
     }
 
-    private void execute(String command) throws IOException, SecureChannelException {
+    private void execute(String command) throws IOException {
 	Process proc = null;
 	try {
 	    proc = Runtime.getRuntime().exec(command);
@@ -49,7 +49,9 @@ public class Connector implements Runnable {
     @Override
     public void run() {
 
-	try {
+	ConnectionInfo.clearInformationForThread();
+
+	try (Socket sock = socket;) {
 	    String input = channel.setup();
 	    if (input != null) {
 		System.out.println("Exec Mode");
@@ -83,12 +85,6 @@ public class Connector implements Runnable {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	} finally {
-	    if (!socket.isClosed()) {
-		try {
-		    socket.close();
-		} catch (IOException e) {
-		}
-	    }
 	    System.out.println("- Closing connection from socket " + socket + " -");
 	}
     }

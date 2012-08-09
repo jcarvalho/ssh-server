@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import pt.jcarvalho.ssh.common.util.Security;
 import pt.jcarvalho.ssh.server.connector.Connector;
+import pt.jcarvalho.ssh.util.Security;
 
 public class SSHServer {
 
