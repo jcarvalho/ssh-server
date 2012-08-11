@@ -29,7 +29,7 @@ public class RSAKeyManager {
     static {
 	try {
 	    System.out.println("\nStart generating RSA key");
-	    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSkA");
+	    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 	    keyGen.initialize(2048);
 	    KeyPair pair = keyGen.generateKeyPair();
 	    System.out.println("Finish generating RSA key");
