@@ -66,21 +66,21 @@ public class NewKeys extends AbstractPacket {
 
 	    keyInformation.commitAlgorithms();
 
-	    keyInformation.incomingCipher.setIV(hashWithCharacterAndLength('A', keyInformation.incomingCipher.cipherBlockSize()));
+	    keyInformation.getIncomingCipher().setIV(hashWithCharacterAndLength('A', keyInformation.getIncomingCipher().cipherBlockSize()));
 
-	    keyInformation.outgoingCipher.setIV(hashWithCharacterAndLength('B', keyInformation.outgoingCipher.cipherBlockSize()));
+	    keyInformation.getOutgoingCipher().setIV(hashWithCharacterAndLength('B', keyInformation.getOutgoingCipher().cipherBlockSize()));
 
-	    keyInformation.incomingCipherKey = hashWithCharacterAndLength('C', keyInformation.incomingCipher.keySize());
+	    keyInformation.setIncomingCipherKey(hashWithCharacterAndLength('C', keyInformation.getIncomingCipher().keySize()));
 
-	    keyInformation.incomingCipher.setKey(keyInformation.incomingCipherKey);
+	    keyInformation.getIncomingCipher().setKey(keyInformation.getIncomingCipherKey());
 
-	    keyInformation.outgoingCipherKey = hashWithCharacterAndLength('D', keyInformation.outgoingCipher.keySize());
+	    keyInformation.setOutgoingCipherKey(hashWithCharacterAndLength('D', keyInformation.getOutgoingCipher().keySize()));
 
-	    keyInformation.outgoingCipher.setKey(keyInformation.outgoingCipherKey);
+	    keyInformation.getOutgoingCipher().setKey(keyInformation.getOutgoingCipherKey());
 
-	    keyInformation.incomingMAC.setKey(hashWithCharacterAndLength('E', keyInformation.incomingMAC.macBytes()));
+	    keyInformation.getIncomingMAC().setKey(hashWithCharacterAndLength('E', keyInformation.getIncomingMAC().macBytes()));
 
-	    keyInformation.outgoingMAC.setKey(hashWithCharacterAndLength('F', keyInformation.outgoingMAC.macBytes()));
+	    keyInformation.getOutgoingMAC().setKey(hashWithCharacterAndLength('F', keyInformation.getOutgoingMAC().macBytes()));
 
 	} catch (CipherException | MacException e) {
 	    e.printStackTrace();

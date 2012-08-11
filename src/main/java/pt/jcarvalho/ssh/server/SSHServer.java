@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import pt.jcarvalho.ssh.server.connector.Connector;
-import pt.jcarvalho.ssh.util.Security;
+import pt.jcarvalho.ssh.util.RSAKeyManager;
 
 public class SSHServer {
 
@@ -30,7 +30,7 @@ public class SSHServer {
     }
 
     public void run() throws IOException {
-	Security.generateKeys();
+	RSAKeyManager.generateKeys();
 
 	try (ServerSocket socket = new ServerSocket(port)) {
 	    System.out.println("- WAITING FOR CONNECTIONS -");

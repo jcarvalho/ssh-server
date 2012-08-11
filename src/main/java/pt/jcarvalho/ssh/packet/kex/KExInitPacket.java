@@ -125,10 +125,10 @@ public class KExInitPacket extends AbstractPacket {
 	for (String prefIncEnc : names[2].getNames()) {
 	    if (prefIncEnc.startsWith("aes") && prefIncEnc.endsWith("-cbc")) {
 		int size = Integer.parseInt(prefIncEnc.substring(3, 6));
-		keyInformation.TincomingCipher = EncryptorAES.cipherWithSize(size);
+		keyInformation.setTincomingCipher(EncryptorAES.cipherWithSize(size));
 		break;
 	    } else if (prefIncEnc.equals("3des-cbc")) {
-		keyInformation.TincomingCipher = new Encryptor3DES();
+		keyInformation.setTincomingCipher(new Encryptor3DES());
 		break;
 	    }
 	}
@@ -138,10 +138,10 @@ public class KExInitPacket extends AbstractPacket {
 	for (String prefOutEnc : names[3].getNames()) {
 	    if (prefOutEnc.startsWith("aes") && prefOutEnc.endsWith("-cbc")) {
 		int size = Integer.parseInt(prefOutEnc.substring(3, 6));
-		keyInformation.ToutgoingCipher = EncryptorAES.cipherWithSize(size);
+		keyInformation.setToutgoingCipher(EncryptorAES.cipherWithSize(size));
 		break;
 	    } else if (prefOutEnc.equals("3des-cbc")) {
-		keyInformation.ToutgoingCipher = new Encryptor3DES();
+		keyInformation.setToutgoingCipher(new Encryptor3DES());
 		break;
 	    }
 	}
@@ -150,16 +150,16 @@ public class KExInitPacket extends AbstractPacket {
 
 	for (String prefIncMAC : names[4].getNames()) {
 	    if (prefIncMAC.equals("hmac-sha1")) {
-		keyInformation.TincomingMAC = new MacSHA1();
+		keyInformation.setTincomingMAC(new MacSHA1());
 		break;
 	    } else if (prefIncMAC.equals("hmac-sha1-96")) {
-		keyInformation.TincomingMAC = new MacSHA196();
+		keyInformation.setTincomingMAC(new MacSHA196());
 		break;
 	    } else if (prefIncMAC.equals("hmac-md5")) {
-		keyInformation.TincomingMAC = new MacMD5();
+		keyInformation.setTincomingMAC(new MacMD5());
 		break;
 	    } else if (prefIncMAC.equals("hmac-md5-96")) {
-		keyInformation.TincomingMAC = new MacMD596();
+		keyInformation.setTincomingMAC(new MacMD596());
 		break;
 	    }
 	}
@@ -168,27 +168,27 @@ public class KExInitPacket extends AbstractPacket {
 
 	for (String prefOutMAC : names[5].getNames()) {
 	    if (prefOutMAC.equals("hmac-sha1")) {
-		keyInformation.ToutgoingMAC = new MacSHA1();
+		keyInformation.setToutgoingMAC(new MacSHA1());
 		break;
 	    } else if (prefOutMAC.equals("hmac-sha1-96")) {
-		keyInformation.ToutgoingMAC = new MacSHA196();
+		keyInformation.setToutgoingMAC(new MacSHA196());
 		break;
 	    } else if (prefOutMAC.equals("hmac-md5")) {
-		keyInformation.ToutgoingMAC = new MacMD5();
+		keyInformation.setToutgoingMAC(new MacMD5());
 		break;
 	    } else if (prefOutMAC.equals("hmac-md5-96")) {
-		keyInformation.ToutgoingMAC = new MacMD596();
+		keyInformation.setToutgoingMAC(new MacMD596());
 		break;
 	    }
 	}
 
 	// No compression algorithm is currently supported, so no point in
 	// checking
-	keyInformation.TincomingCompression = new CompressorNone();
-	keyInformation.ToutgoingCompression = new CompressorNone();
+	keyInformation.setTincomingCompression(new CompressorNone());
+	keyInformation.setToutgoingCompression(new CompressorNone());
 
-	if (keyInformation.kex == null || keyInformation.TincomingCipher == null || keyInformation.ToutgoingCipher == null
-		|| keyInformation.TincomingMAC == null || keyInformation.ToutgoingMAC == null) {
+	if (keyInformation.kex == null || keyInformation.getTincomingCipher() == null || keyInformation.getToutgoingCipher() == null
+		|| keyInformation.getTincomingMAC() == null || keyInformation.getToutgoingMAC() == null) {
 	    valid = false;
 	}
 

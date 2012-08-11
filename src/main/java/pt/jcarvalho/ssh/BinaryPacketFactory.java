@@ -12,11 +12,11 @@ public class BinaryPacketFactory {
 
     public static byte[] packetWithPayload(byte[] payload) {
 
-	byte[] load = ConnectionInfo.get().outgoingCompression.compress(payload, null);
+	byte[] load = ConnectionInfo.get().getOutgoingCompression().compress(payload, null);
 
 	int length = 5 + load.length;
 
-	int mod = Math.max(ConnectionInfo.get().outgoingCipher.cipherBlockSize(), 8);
+	int mod = Math.max(ConnectionInfo.get().getOutgoingCipher().cipherBlockSize(), 8);
 
 	int paddingLength = mod - (length % mod);
 
@@ -35,16 +35,16 @@ public class BinaryPacketFactory {
 
 	byte[] seqNum = ByteArrayUtils.toByteArray(ConnectionInfo.get().outgoingSeqNumber++);
 
-	byte[] ciphered = ConnectionInfo.get().outgoingCipher.cipher(toCipher);
+	byte[] ciphered = ConnectionInfo.get().getOutgoingCipher().cipher(toCipher);
 
-	byte[] mac = ConnectionInfo.get().outgoingMAC.generateCode(ByteArrayUtils.concat(seqNum, toCipher));
+	byte[] mac = ConnectionInfo.get().getOutgoingMAC().generateCode(ByteArrayUtils.concat(seqNum, toCipher));
 
 	return ByteArrayUtils.concat(ciphered, mac);
     }
 
     public static byte[] payloadOfPacket(byte[] firstPacket, byte[] packet, byte[] mac) {
 
-	int mod = Math.max(ConnectionInfo.get().incomingCipher.cipherBlockSize(), 8);
+	int mod = Math.max(ConnectionInfo.get().getIncomingCipher().cipherBlockSize(), 8);
 
 	if (packet.length % mod != 0) {
 	    throw new RuntimeException("Packet length was smaller than expected!");
@@ -61,13 +61,13 @@ public class BinaryPacketFactory {
 	byte[] temp = new byte[mod];
 	for (int i = 1; i <= nRounds; i++) {
 	    System.arraycopy(packet, i * mod, temp, 0, mod);
-	    byte[] dec = ConnectionInfo.get().incomingCipher.decipher(temp);
+	    byte[] dec = ConnectionInfo.get().getIncomingCipher().decipher(temp);
 	    System.arraycopy(dec, 0, deciphered, i * mod, mod);
 	}
 
 	byte[] seqNum = ByteArrayUtils.toByteArray(ConnectionInfo.get().incomingSeqNumber++);
 
-	byte[] expectedMac = ConnectionInfo.get().incomingMAC.generateCode(ByteArrayUtils.concat(seqNum, deciphered));
+	byte[] expectedMac = ConnectionInfo.get().getIncomingMAC().generateCode(ByteArrayUtils.concat(seqNum, deciphered));
 
 	if (!Arrays.equals(mac, expectedMac)) {
 	    ConnectionInfo.get().incomingSeqNumber--;
@@ -80,7 +80,7 @@ public class BinaryPacketFactory {
 
 	System.arraycopy(deciphered, 5, result, 0, totalContentLength);
 
-	return ConnectionInfo.get().incomingCompression.decompress(result, null);
+	return ConnectionInfo.get().getIncomingCompression().decompress(result, null);
 
     }
 
@@ -90,11 +90,11 @@ public class BinaryPacketFactory {
      */
 
     public static int getMACSize() {
-	return ConnectionInfo.get().incomingMAC.macBytes();
+	return ConnectionInfo.get().getIncomingMAC().macBytes();
     }
 
     public static int getMod() {
-	return Math.max(ConnectionInfo.get().incomingCipher.cipherBlockSize(), 8);
+	return Math.max(ConnectionInfo.get().getIncomingCipher().cipherBlockSize(), 8);
     }
 
 }

@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import pt.jcarvalho.ssh.BinaryPacketFactory;
 import pt.jcarvalho.ssh.ConnectionInfo;
+import pt.jcarvalho.ssh.SSHNumbers;
 import pt.jcarvalho.ssh.SecureChannel;
 import pt.jcarvalho.ssh.adt.NameList;
 import pt.jcarvalho.ssh.packet.SSHPacket;
@@ -48,6 +49,8 @@ public class SSHSecureChannel implements SecureChannel {
 
     @Override
     public String setup() throws IOException {
+
+	ConnectionInfo.clearInformationForThread();
 
 	byte[] protoVersionExc = new String(ConnectionInfo.get().serverString + "\r\n").getBytes();
 
@@ -146,7 +149,7 @@ public class SSHSecureChannel implements SecureChannel {
 		throw new IOException("Channel is closed!");
 	    }
 
-	    byte[] firstPacket = ConnectionInfo.get().incomingCipher.decipher(first);
+	    byte[] firstPacket = ConnectionInfo.get().getIncomingCipher().decipher(first);
 
 	    int numBytesForPacket = ByteArrayUtils.toInt32(firstPacket) + 4;
 
@@ -223,7 +226,7 @@ public class SSHSecureChannel implements SecureChannel {
 		break;
 	    }
 
-	    byte[] firstPacket = ConnectionInfo.get().incomingCipher.decipher(first);
+	    byte[] firstPacket = ConnectionInfo.get().getIncomingCipher().decipher(first);
 
 	    int numBytesForPacket = ByteArrayUtils.toInt32(firstPacket) + 4;
 
@@ -344,7 +347,7 @@ public class SSHSecureChannel implements SecureChannel {
 
     @Override
     public void close() throws IOException {
-	this.close(1);
+	this.close(SSHNumbers.SSH_DISCONNECT_BY_APPLICATION);
     }
 
 }

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import pt.jcarvalho.ssh.ConnectionInfo;
 import pt.jcarvalho.ssh.SecureChannel;
 import pt.jcarvalho.ssh.server.channel.SSHSecureChannel;
 
@@ -32,7 +31,7 @@ public class Connector implements Runnable {
 	InputStreamReader inst = new InputStreamReader(in);
 	BufferedReader buf = new BufferedReader(inst);
 	String lin;
-	StringBuffer sb = new StringBuffer();
+	StringBuilder sb = new StringBuilder();
 	while ((lin = buf.readLine()) != null) {
 	    sb.append(lin);
 	    sb.append("\r\n");
@@ -48,8 +47,6 @@ public class Connector implements Runnable {
 
     @Override
     public void run() {
-
-	ConnectionInfo.clearInformationForThread();
 
 	try (Socket sock = socket;) {
 	    String input = channel.setup();
@@ -74,6 +71,9 @@ public class Connector implements Runnable {
 		    } else if (opts[0].equalsIgnoreCase("hello")) {
 			execute("bash /speak.sh 'Hello and welcome to our presentation'");
 			channel.write("Hello there, I'm the SIRS SSH server powered by group 2.");
+		    } else if (opts[0].equalsIgnoreCase("close")) {
+			channel.write("Shutting down server...");
+			System.exit(1);
 		    } else
 			execute(line);
 		}

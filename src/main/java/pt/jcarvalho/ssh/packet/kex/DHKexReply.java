@@ -20,7 +20,7 @@ import pt.jcarvalho.ssh.packet.AbstractPacket;
 import pt.jcarvalho.ssh.packet.SSHPacket;
 import pt.jcarvalho.ssh.packet.base.Disconnect;
 import pt.jcarvalho.ssh.util.ByteArrayUtils;
-import pt.jcarvalho.ssh.util.Security;
+import pt.jcarvalho.ssh.util.RSAKeyManager;
 
 public class DHKexReply extends AbstractPacket {
 
@@ -132,8 +132,8 @@ public class DHKexReply extends AbstractPacket {
 	     * Generate the blob with the Host Key, encoded in ssh-rsa
 	     */
 
-	    keyInformation.K_S = ByteArrayUtils.concatAll(SSHString.byteArrayOf("ssh-rsa"), new MPInt(Security.getRsaPub()
-		    .getPublicExponent()).toByteArray(), new MPInt(Security.getRsaPub().getModulus()).toByteArray());
+	    keyInformation.K_S = ByteArrayUtils.concatAll(SSHString.byteArrayOf("ssh-rsa"), new MPInt(RSAKeyManager.getRsaPub()
+		    .getPublicExponent()).toByteArray(), new MPInt(RSAKeyManager.getRsaPub().getModulus()).toByteArray());
 
 	    /**
 	     * Generate H
@@ -153,7 +153,7 @@ public class DHKexReply extends AbstractPacket {
 	     * Sign H
 	     */
 
-	    byte[] finalHash = SSHString.byteArrayOf(Security.Sign(Security.getRsaPriv(), keyInformation.H));
+	    byte[] finalHash = SSHString.byteArrayOf(RSAKeyManager.Sign(RSAKeyManager.getRsaPriv(), keyInformation.H));
 
 	    SSHString s = new SSHString(ByteArrayUtils.concat(SSHString.byteArrayOf("ssh-rsa"), finalHash));
 

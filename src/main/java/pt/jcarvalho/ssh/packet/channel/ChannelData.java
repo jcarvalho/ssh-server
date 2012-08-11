@@ -39,13 +39,6 @@ public class ChannelData extends AbstractPacket {
 	data = ByteArrayUtils.concat(data, b);
     }
 
-    public void removeLastN(int n) {
-	byte[] newB = new byte[data.length - n];
-	System.arraycopy(data, 0, newB, 0, data.length - n);
-	System.arraycopy(newB, 0, data, 0, data.length - n);
-	data = newB;
-    }
-
     @Override
     public byte[] binaryRepresentation() {
 	byte[] endData = data;

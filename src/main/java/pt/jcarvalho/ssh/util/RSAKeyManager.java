@@ -13,36 +13,36 @@ import java.security.interfaces.RSAPublicKey;
 
 import javax.crypto.Cipher;
 
-public class Security {
+public class RSAKeyManager {
 
-    public static RSAPublicKey rsaPub;
-    public static RSAPrivateKey rsaPriv;
-    public static KeyPair pair;
+    public static final RSAPublicKey rsaPub;
+    public static final RSAPrivateKey rsaPriv;
 
     public static RSAPublicKey getRsaPub() {
 	return rsaPub;
     }
 
-    public static void setRsaPub(RSAPublicKey rsaPub) {
-	Security.rsaPub = rsaPub;
+    public static RSAPrivateKey getRsaPriv() {
+	return rsaPriv;
+    }
+
+    static {
+	try {
+	    System.out.println("\nStart generating RSA key");
+	    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSkA");
+	    keyGen.initialize(2048);
+	    KeyPair pair = keyGen.generateKeyPair();
+	    System.out.println("Finish generating RSA key");
+
+	    rsaPriv = (RSAPrivateKey) pair.getPrivate();
+	    rsaPub = (RSAPublicKey) pair.getPublic();
+	} catch (NoSuchAlgorithmException ex) {
+	    throw new RuntimeException("Error, RSA is not available in the system!");
+	}
     }
 
     public static void generateKeys() {
-
-	System.out.println("\nStart generating RSA key");
-	try {
-	    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-	    keyGen.initialize(2048);
-	    pair = keyGen.generateKeyPair();
-	} catch (Exception ex) {
-	    System.out.println(ex.toString());
-	}
-
-	System.out.println("Finish generating RSA key");
-
-	rsaPriv = (RSAPrivateKey) pair.getPrivate();
-	rsaPub = (RSAPublicKey) pair.getPublic();
-
+	// Keys are generated upon initialization of the class
     }
 
     public static byte[] Cipher(PrivateKey _priv, byte[] plainText) {
@@ -129,11 +129,4 @@ public class Security {
 	return false;
     }
 
-    public static RSAPrivateKey getRsaPriv() {
-	return rsaPriv;
-    }
-
-    public static void setRsaPriv(RSAPrivateKey rsaPriv) {
-	Security.rsaPriv = rsaPriv;
-    }
 }
