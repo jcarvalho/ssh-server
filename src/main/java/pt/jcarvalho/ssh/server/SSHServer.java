@@ -9,6 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import pt.jcarvalho.ssh.server.connector.Connector;
+import pt.jcarvalho.ssh.util.PluginManager;
 import pt.jcarvalho.ssh.util.RSAKeyManager;
 
 public class SSHServer {
@@ -18,6 +19,7 @@ public class SSHServer {
     static {
 	usernames.put("joaocarvalho", "password");
 	usernames.put("guest", "password");
+	PluginManager.registerPlugin(SSHServerAuthenticator.class);
     }
 
     private final Executor executor;
